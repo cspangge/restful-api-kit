@@ -4,22 +4,11 @@ import (
 	_ "fmt"
 	"github.com/gin-gonic/gin"
 	_ "net/http"
-	tools "restful-api-kit/Utilities"
 	apiControllerV1 "restful-api-kit/controllers/api/v1"
 	apiControllerV2 "restful-api-kit/controllers/api/v2"
 )
 
 func SetupRouter() *gin.Engine {
-	mode := tools.GetEnv("mode")
-
-	if mode == "development" {
-		gin.SetMode(gin.DebugMode)
-	} else if mode == "production" {
-		gin.SetMode(gin.ReleaseMode)
-	} else {
-		gin.SetMode(gin.DebugMode)
-	}
-
 	r := gin.Default()
 
 	r.Use(func(c *gin.Context) {
