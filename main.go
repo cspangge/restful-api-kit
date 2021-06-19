@@ -23,7 +23,7 @@ func main() {
 	port := tools.GetEnv("port")
 
 	if port == "" {
-		port = "7000" //localhost
+		port = "8000" //localhost
 	}
 
 	err := r.Run(":" + port)
