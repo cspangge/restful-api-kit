@@ -24,7 +24,7 @@ func Respond(w http.ResponseWriter, data map[string]interface{}) {
 	checkErr(err)
 }
 
-func RespondString(w http.ResponseWriter, data string) {
+func RespondString(w http.ResponseWriter, data map[string]interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(data)
 	checkErr(err)

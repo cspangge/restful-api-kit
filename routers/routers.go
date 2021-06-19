@@ -30,7 +30,11 @@ func SetupRouter() *gin.Engine {
 	v1 := r.Group("/api/v1")
 	v2 := r.Group("/api/v2")
 
+	// V1
 	v1.GET("/ping", apiControllerV1.Ping)
+	v1.GET("/table", apiControllerV1.ListTables)
+
+	// V2
 	v2.GET("/ping", apiControllerV2.Ping)
 	return r
 }

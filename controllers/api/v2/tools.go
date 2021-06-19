@@ -6,5 +6,8 @@ import (
 )
 
 func Ping(c *gin.Context) {
-	u.RespondString(c.Writer, "Pong")
+	res := map[string]interface{}{
+		"data": "Pong",
+	}
+	u.RespondString(c.Writer, res)
 }
