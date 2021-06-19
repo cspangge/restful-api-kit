@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/gin-gonic/gin"
-	tools "restful-api-kit/Utilities"
 	Routers "restful-api-kit/routers"
+	tools "restful-api-kit/utilities"
 )
 
 func main() {
