@@ -8,4 +8,8 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/joho/godotenv v1.3.0
 	github.com/swaggo/swag v1.7.0
+	gorm.io/driver/mysql v1.1.1
+	gorm.io/driver/postgres v1.1.0
+	gorm.io/driver/sqlite v1.1.4
+	gorm.io/gorm v1.21.11
 )

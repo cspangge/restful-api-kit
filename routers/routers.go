@@ -32,7 +32,7 @@ func SetupRouter() *gin.Engine {
 
 	// V1
 	v1.GET("/ping", apiControllerV1.Ping)
-	v1.GET("/table", apiControllerV1.ListTables)
+	v1.GET("/health", apiControllerV1.DbPing)
 
 	// V2
 	v2.GET("/ping", apiControllerV2.Ping)

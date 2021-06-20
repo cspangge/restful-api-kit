@@ -1,0 +1,11 @@
+{
+  "database": {
+    "name": "restful_api_kit",
+    "password": "Demo2021..",
+    "user": "restful_api_kit",
+    "type": "mysql",
+    "host": "117.120.8.54",
+    "port": "3306",
+    "table_prefix": "tbl_"
+  }
+}
