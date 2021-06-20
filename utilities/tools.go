@@ -17,6 +17,6 @@ func GetEnv(key string) string {
 
 func CheckErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }

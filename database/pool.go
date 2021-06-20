@@ -64,17 +64,18 @@ func Setup() {
 
 // GetDB 开放给外部获得db连接
 func GetDB() *gorm.DB {
+	if db == nil {
+		Setup()
+	}
 	sqlDB, err := db.DB()
 	if err != nil {
 		tools.CheckErr(err)
-		Setup()
 	}
 	if err := sqlDB.Ping(); err != nil {
 		err := sqlDB.Close()
 		if err != nil {
 			tools.CheckErr(err)
 		}
-		Setup()
 	}
 
 	return db
