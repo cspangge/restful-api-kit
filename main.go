@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/gin-gonic/gin"
+	"github.com/unrolled/secure"
 	"restful-api-kit/config"
 	Routers "restful-api-kit/routers"
 	tools "restful-api-kit/utilities"
@@ -29,6 +30,24 @@ func main() {
 		port = "8000" //localhost
 	}
 
-	err := r.Run(":" + port)
+	//err := r.Run(":" + port)
+	err := r.RunTLS(":" + port, "./key/localhost.crt", "./key/localhost.key")
 	tools.CheckErr(err)
+}
+
+
+func TlsHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		secureMiddleware := secure.New(secure.Options{
+			SSLRedirect: true,
+			SSLHost:     "localhost:8000",
+		})
+		err := secureMiddleware.Process(c.Writer, c.Request)
+
+		// If there was an error, do not continue.
+		if err != nil {
+			return
+		}
+		c.Next()
+	}
 }
