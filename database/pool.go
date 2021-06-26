@@ -2,12 +2,12 @@ package database
 
 import (
 	"fmt"
+	"gorm.io/driver/postgres"
 	"restful-api-kit/config"
 	tools "restful-api-kit/utilities"
 	"time"
 
 	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -20,7 +20,8 @@ func Setup() {
 	// db = newConnection()
 	var dbURI string
 	var dialector gorm.Dialector
-	if config.DatabaseSetting.Type == "mysql" {
+	switch config.DatabaseSetting.Type {
+	case "mysql":
 		dbURI = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true",
 			config.DatabaseSetting.User,
 			config.DatabaseSetting.Password,
@@ -35,7 +36,7 @@ func Setup() {
 			DontSupportRenameColumn:   true,  // `change` when rename column, rename column not supported before MySQL 8, MariaDB
 			SkipInitializeWithVersion: false, // auto configure based on currently MySQL version
 		})
-	} else if config.DatabaseSetting.Type == "postgres" {
+	case "postgres":
 		dbURI = fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
 			config.DatabaseSetting.Host,
 			config.DatabaseSetting.Port,
@@ -46,10 +47,11 @@ func Setup() {
 			DSN:                  "user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai",
 			PreferSimpleProtocol: true, // disables implicit prepared statement usage
 		})
-	} else { // sqlite3
+	case "sqlite3":
 		dbURI = fmt.Sprintf("test.db")
 		dialector = sqlite.Open("test.db")
 	}
+
 	conn, err := gorm.Open(dialector, &gorm.Config{})
 	if err != nil {
 		tools.CheckErr(err)
