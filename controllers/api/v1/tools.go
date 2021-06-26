@@ -16,6 +16,13 @@ func Ping(c *gin.Context) {
 	u.RespondString(c.Writer, res)
 }
 
+func Error(c *gin.Context) {
+	res := map[string]interface{}{
+		"data": "Login Failed",
+	}
+	u.RespondString(c.Writer, res)
+}
+
 func DbPing(c *gin.Context) {
 	db := database.GetDB()
 	sqlDB, _ := db.DB()

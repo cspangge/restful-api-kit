@@ -36,6 +36,7 @@ func SetupRouter() *gin.Engine {
 	v1.GET("/ping", apiControllerV1.Ping)
 	v1.GET("/health", apiControllerV1.DbPing)
 	v1.GET("/google", google.GoogleAuth)
+	v1.GET("/error", apiControllerV1.Error)
 	//v1.GET("/callback", google.GoogleCallback)
 	v3.GET("/", google.GoogleCallback)
 

@@ -45,7 +45,7 @@ func GoogleCallback(c *gin.Context) {
 	state := c.Request.FormValue("state")
 	if state != oauthStateString {
 		fmt.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, state)
-		c.Redirect(http.StatusTemporaryRedirect, "/")
+		c.Redirect(http.StatusTemporaryRedirect, "/api/v1/error")
 		return
 	}
 	fmt.Println(state)
@@ -56,7 +56,7 @@ func GoogleCallback(c *gin.Context) {
 	fmt.Println(token)
 	if err != nil {
 		tools.CheckErr(err)
-		c.Redirect(http.StatusTemporaryRedirect, "/")
+		c.Redirect(http.StatusTemporaryRedirect, "/api/v1/error")
 		return
 	}
 
