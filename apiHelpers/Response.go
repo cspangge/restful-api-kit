@@ -2,8 +2,8 @@ package apiHelpers
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
+	tools "restful-api-kit/utilities"
 )
 
 //ResponseData structure
@@ -21,17 +21,11 @@ func Message(status int, message string) map[string]interface{} {
 func Respond(w http.ResponseWriter, data map[string]interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(data)
-	checkErr(err)
+	tools.CheckErr(err)
 }
 
 func RespondString(w http.ResponseWriter, data map[string]interface{}) {
 	w.Header().Add("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(data)
-	checkErr(err)
-}
-
-func checkErr(err error) {
-	if err != nil {
-		log.Fatal(err)
-	}
+	tools.CheckErr(err)
 }
