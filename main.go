@@ -30,6 +30,8 @@ func main() {
 		port = "8000" //localhost
 	}
 
+	TlsHandler()
+
 	//err := r.Run(":" + port)
 	err := r.RunTLS(":" + port, "./key/localhost.crt", "./key/localhost.key")
 	tools.CheckErr(err)

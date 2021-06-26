@@ -6,6 +6,7 @@ import (
 	_ "net/http"
 	apiControllerV1 "restful-api-kit/controllers/api/v1"
 	apiControllerV2 "restful-api-kit/controllers/api/v2"
+	google "restful-api-kit/middlewares/oauth"
 )
 
 func SetupRouter() *gin.Engine {
@@ -29,10 +30,14 @@ func SetupRouter() *gin.Engine {
 
 	v1 := r.Group("/api/v1")
 	v2 := r.Group("/api/v2")
+	v3 := r.Group("/")
 
 	// V1
 	v1.GET("/ping", apiControllerV1.Ping)
 	v1.GET("/health", apiControllerV1.DbPing)
+	v1.GET("/google", google.GoogleAuth)
+	//v1.GET("/callback", google.GoogleCallback)
+	v3.GET("/", google.GoogleCallback)
 
 	// V2
 	v2.GET("/ping", apiControllerV2.Ping)

@@ -8,6 +8,7 @@ require (
 	github.com/joho/godotenv v1.3.0
 	github.com/swaggo/swag v1.7.0
 	github.com/unrolled/secure v1.0.9
+	golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421
 	gorm.io/driver/mysql v1.1.1
 	gorm.io/driver/postgres v1.1.0
 	gorm.io/driver/sqlite v1.1.4
