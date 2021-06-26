@@ -11,24 +11,20 @@ import (
 
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
-
-	r.Use(
-		middlewares.Cors(),
-		middlewares.JWTAuth(),
-	)
+	r.Use(middlewares.Cors())
 
 	var (
 		v1 = r.Group("/api/v1")
 		v2 = r.Group("/api/v2")
 	)
 
+	v1.POST("/login", apiControllerV1.Login)
+
+	v1.Use(middlewares.JWTAuth())
 	// V1
 	v1.GET("/ping", apiControllerV1.Ping)
 	v1.GET("/health", apiControllerV1.DbPing)
 
-	v1.POST("/login", apiControllerV1.GenToken)
-
-	// V2
 	v2.GET("/ping", apiControllerV2.Ping)
 	return r
 }

@@ -1,6 +1,9 @@
 package middlewares
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"github.com/unrolled/secure"
+)
 
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -17,5 +20,21 @@ func Cors() gin.HandlerFunc {
 		} else {
 			c.Next()
 		}
+	}
+}
+
+func TlsHandler() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		secureMiddleware := secure.New(secure.Options{
+			SSLRedirect: true,
+			SSLHost:     "localhost:8000",
+		})
+		err := secureMiddleware.Process(c.Writer, c.Request)
+
+		// If there was an error, do not continue.
+		if err != nil {
+			return
+		}
+		c.Next()
 	}
 }
