@@ -33,7 +33,7 @@ func main() {
 	TlsHandler()
 
 	//err := r.Run(":" + port)
-	err := r.RunTLS(":" + port, "./key/localhost.crt", "./key/localhost.key")
+	err := r.RunTLS(":" + port, "./key/server.crt", "./key/server.key")
 	tools.CheckErr(err)
 }
 

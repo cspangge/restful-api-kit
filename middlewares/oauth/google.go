@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	u "restful-api-kit/apiHelpers"
 	tools "restful-api-kit/utilities"
 )
 
@@ -44,7 +45,7 @@ func GoogleCallback(c *gin.Context) {
 	state := c.Request.FormValue("state")
 	if state != oauthStateString {
 		fmt.Printf("invalid oauth state, expected '%s', got '%s'\n", oauthStateString, state)
-		http.Redirect(c.Writer, c.Request, "/", http.StatusTemporaryRedirect)
+		c.Redirect(http.StatusTemporaryRedirect, "/")
 		return
 	}
 	fmt.Println(state)
@@ -54,8 +55,8 @@ func GoogleCallback(c *gin.Context) {
 	token, err := googleOauthConfig.Exchange(oauth2.NoContext, code)
 	fmt.Println(token)
 	if err != nil {
-		fmt.Printf("Code exchange failed with '%s'\n\n", err)
-		http.Redirect(c.Writer, c.Request, "/", http.StatusTemporaryRedirect)
+		tools.CheckErr(err)
+		c.Redirect(http.StatusTemporaryRedirect, "/")
 		return
 	}
 
@@ -71,8 +72,8 @@ func GoogleCallback(c *gin.Context) {
 	if err != nil {
 		tools.CheckErr(err)
 	}
-	_, err2 := fmt.Fprintf(c.Writer, "Content: %s\n", contents)
-	if err2 != nil {
-		tools.CheckErr(err2)
+	res := map[string]interface{}{
+		"data": contents,
 	}
+	u.RespondString(c.Writer, res)
 }
