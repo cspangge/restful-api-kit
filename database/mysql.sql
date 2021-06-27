@@ -1,10 +1,11 @@
 CREATE TABLE `tbl_user` (
     `id` int unsigned NOT NULL AUTO_INCREMENT,
+    `user_id` int unsigned NOT NULL,
     `name` varchar(50) NOT null default '',
     `email` varchar(50) NOT null default '',
     `pwd` varchar(50) NOT null default '',
     `role` int not null default 0,
-    `active` int not null default 0 COMMENT '1-active; 2-inactive',
+    `active` int not null default 2 COMMENT '1-active; 2-inactive',
     `disable_url` varchar(255) not null default '',
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` int not null default 0,
@@ -17,8 +18,9 @@ CREATE TABLE `tbl_user` (
 
 CREATE TABLE `tbl_role` (
     `id` int unsigned NOT NULL AUTO_INCREMENT,
+    `role_id` int unsigned NOT NULL,
     `name` varchar(50) NOT null default '',
-    `active` int not null default 0 COMMENT '1-active; 2-inactive',
+    `active` int not null default 2 COMMENT '1-active; 2-inactive',
     `urls` varchar(255) not null default '',
     `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `created_by` int not null default 0,
@@ -30,8 +32,9 @@ CREATE TABLE `tbl_role` (
 
 CREATE TABLE `tbl_url` (
    `id` int unsigned NOT NULL AUTO_INCREMENT,
+   `url_id` int unsigned NOT NULL,
    `url` varchar(255) NOT null default '',
-   `active` int not null default 0 COMMENT '1-active; 2-inactive',
+   `active` int not null default 2 COMMENT '1-active; 2-inactive',
    `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
    `created_by` int not null default 0,
    `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
