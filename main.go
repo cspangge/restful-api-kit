@@ -14,7 +14,7 @@ import (
 func main() {
 	Initialize()
 	if err := Routers.SetupRouter().RunTLS(
-		fmt.Sprintf(":%d", GetPort()),
+		fmt.Sprintf(":%s", GetPort()),
 		"./key/localhost.crt",
 		"./key/localhost.key"); err != nil {
 		panic(err)

@@ -5,9 +5,8 @@ import (
 	_ "log"
 	"net/http"
 	u "restful-api-kit/apiHelpers"
+	"restful-api-kit/cache"
 	"restful-api-kit/database"
-	"restful-api-kit/middlewares"
-	"restful-api-kit/models"
 	_ "restful-api-kit/utilities"
 	tools "restful-api-kit/utilities"
 )
@@ -32,32 +31,13 @@ func DbPing(c *gin.Context) {
 	u.RespondString(c.Writer, res)
 }
 
-func Login(c *gin.Context) {
-	type LoginReq struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
-	var req LoginReq
-	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusOK, u.MakeRes(u.FAIL_TO_PARSE_PARAMETERS))
-		return
-	}
-
-	var count int64
-	db := database.GetDB()
-	models.TblUserMgr(db.Where("email = ? and pwd = ?", req.Email, req.Password)).Count(&count)
-
-	if count == 0 {
-		c.JSON(http.StatusOK, u.MakeRes(u.FAIL_TO_LOGIN))
-		return
-	}
-
-	res, err := middlewares.GenerateToken(req.Email, req.Password)
+func TestRedis(c *gin.Context) {
+	redis := cache.GetCache()
+	res, err := redis.GetOne(c, "a")
 	if err != nil {
-		c.JSON(http.StatusOK, u.MakeRes(u.FAIL_TO_GET_TOKEN))
+		c.JSON(http.StatusOK, u.Resp(u.SUCCESS, nil))
 		return
 	}
-
-	c.JSON(http.StatusOK, u.MakeRes(u.SUCCESS, res))
+	c.JSON(http.StatusOK, u.Resp(u.SUCCESS, res))
 	return
 }

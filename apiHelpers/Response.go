@@ -19,7 +19,7 @@ type (
 	}
 )
 
-func MakeRes(code int, data ...interface{}) *Response {
+func Resp(code int, data ...interface{}) *Response {
 	res := &Response{
 		Code:    code,
 		Message: CODE2MSG[code],
