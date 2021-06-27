@@ -9,22 +9,21 @@ import (
 	"restful-api-kit/models"
 )
 
+type LoginReq struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func Login(c *gin.Context) {
-	type LoginReq struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
 	var req LoginReq
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_PARSE_PARAMETERS))
 		return
 	}
 
-	var count int64
 	db := database.GetDB()
-	models.TblUserMgr(db.Where("email = ? and pwd = ?", req.Email, req.Password)).Count(&count)
-
-	if count == 0 {
+	if !models.Exist(db, "tbl_user", "email = ? and pwd = ?", req.Email, req.Password) {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_LOGIN))
 		return
 	}

@@ -46,6 +46,11 @@ func (obj *_TblUserMgr) WithID(id uint) Option {
 	return optionFunc(func(o *options) { o.query["id"] = id })
 }
 
+// WithUserID user_id获取
+func (obj *_TblUserMgr) WithUserID(userID uint) Option {
+	return optionFunc(func(o *options) { o.query["user_id"] = userID })
+}
+
 // WithName name获取
 func (obj *_TblUserMgr) WithName(name string) Option {
 	return optionFunc(func(o *options) { o.query["name"] = name })
@@ -66,7 +71,7 @@ func (obj *_TblUserMgr) WithRole(role int) Option {
 	return optionFunc(func(o *options) { o.query["role"] = role })
 }
 
-// WithActive active获取
+// WithActive active获取 1-active; 2-inactive
 func (obj *_TblUserMgr) WithActive(active int) Option {
 	return optionFunc(func(o *options) { o.query["active"] = active })
 }
@@ -140,6 +145,20 @@ func (obj *_TblUserMgr) GetBatchFromID(ids []uint) (results []*TblUser, err erro
 	return
 }
 
+// GetFromUserID 通过user_id获取内容
+func (obj *_TblUserMgr) GetFromUserID(userID uint) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`user_id` = ?", userID).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromUserID 批量查找
+func (obj *_TblUserMgr) GetBatchFromUserID(userIDs []uint) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`user_id` IN (?)", userIDs).Find(&results).Error
+
+	return
+}
+
 // GetFromName 通过name获取内容
 func (obj *_TblUserMgr) GetFromName(name string) (results []*TblUser, err error) {
 	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`name` = ?", name).Find(&results).Error
@@ -196,14 +215,14 @@ func (obj *_TblUserMgr) GetBatchFromRole(roles []int) (results []*TblUser, err e
 	return
 }
 
-// GetFromActive 通过active获取内容
+// GetFromActive 通过active获取内容 1-active; 2-inactive
 func (obj *_TblUserMgr) GetFromActive(active int) (results []*TblUser, err error) {
 	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`active` = ?", active).Find(&results).Error
 
 	return
 }
 
-// GetBatchFromActive 批量查找
+// GetBatchFromActive 批量查找 1-active; 2-inactive
 func (obj *_TblUserMgr) GetBatchFromActive(actives []int) (results []*TblUser, err error) {
 	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`active` IN (?)", actives).Find(&results).Error
 

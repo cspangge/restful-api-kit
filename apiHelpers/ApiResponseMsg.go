@@ -12,6 +12,8 @@ const (
 	FAIL_TO_LOGIN            = 1003
 	FAIL_TO_GET_TOKEN        = 1004
 	FAIl_TO_GET_CACHE_RES    = 1005
+	ACCOUNT_ALREADY_EXISTS   = 1006
+	FAIl_TO_CREATE_USER      = 1007
 )
 
 var (
@@ -22,5 +24,7 @@ var (
 		FAIL_TO_LOGIN:            "Check your email and password, please",
 		FAIL_TO_GET_TOKEN:        "Fail to get token",
 		FAIl_TO_GET_CACHE_RES:    "Fail to get cache result",
+		ACCOUNT_ALREADY_EXISTS:   "Account already exists",
+		FAIl_TO_CREATE_USER:      "Fail to create user",
 	}
 )
