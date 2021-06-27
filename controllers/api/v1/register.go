@@ -1,10 +1,13 @@
 package v1
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	u "restful-api-kit/apiHelpers"
+	"restful-api-kit/cache"
 	d "restful-api-kit/database"
+	"restful-api-kit/helpers"
 	"restful-api-kit/models"
 )
 
@@ -31,8 +34,10 @@ func SignUp(c *gin.Context) {
 	}
 
 	var (
-		id   = models.GetMaxId(db, tbl, "user_id")
-		user = models.TblUser{
+		id            = models.GetMaxId(db, tbl, "user_id")
+		redis         = cache.GetCache()
+		uuid, uuidErr = helpers.GetUuid()
+		user          = models.TblUser{
 			UserID: id + 1,
 			Name:   req.Name,
 			Email:  req.Email,
@@ -40,7 +45,24 @@ func SignUp(c *gin.Context) {
 		}
 	)
 
+	if uuidErr != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, uuidErr.Error()))
+	}
+	if _, setErr := redis.SetOne(c, uuid, true, 1*60); setErr != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, setErr.Error()))
+	}
 	if err := db.Table(tbl).Create(&user).Error; err != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, err.Error()))
+		return
+	}
+
+	var (
+		subject = "Sea cow tech invite you to activate your account"
+		body    = fmt.Sprintf("Clink here: %s to activate your account",
+			fmt.Sprintf("https://localhost:8000/api/v1/activate?activeToken=%s", uuid),
+		)
+	)
+	if err := helpers.SendEMail(subject, body, req.Email); err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, err.Error()))
 		return
 	}

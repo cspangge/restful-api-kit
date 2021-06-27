@@ -59,7 +59,7 @@ func (r *Redis) SetOne(c *gin.Context, key string, val interface{}, ttl ...time.
 }
 
 func (r *Redis) HashSet(c *gin.Context, key string, val ...interface{}) (string, error) {
-	err := r.HSet(c, key, map[string]interface{}{"b": "test1", "c": "test2"}).Err()
+	err := r.HSet(c, key, val...).Err()
 	if err != nil {
 		return SET_FAILURE, errors.New(err.Error())
 	}

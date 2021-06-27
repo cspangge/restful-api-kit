@@ -7,12 +7,6 @@ import (
 	"time"
 )
 
-type Claims struct {
-	Name  string `json:"name"`
-	Phone string `json:"phone"`
-	jwt.StandardClaims
-}
-
 var JwtSecret = []byte(
 	`-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA0NVnB1TZ15xma7+wRYcRLTQ1Zcjw07xIRGHYS5BpgxofsKg0
@@ -38,6 +32,12 @@ PGhHhsxQKHo+g4uMUCTkGQKBgBgGdLaJKmqVVCSIRT8hcWqFFFoaTrd2Njd3LjS1
 Kah+YXMdtQiFSBHELduK16A4+zfSie++DHnwAlbaIKYqkoXMzcX9Qy94POY7c0CE
 SmMd0egi1xFgy8oI2wbUc3DrWKQow6HxpLA/yZZPTcfe2pE3JCYj7rd5wMd64g41
 `)
+
+type Claims struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	jwt.StandardClaims
+}
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {

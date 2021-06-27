@@ -9,6 +9,7 @@ import (
 	"restful-api-kit/database"
 	_ "restful-api-kit/utilities"
 	tools "restful-api-kit/utilities"
+	"time"
 )
 
 func Ping(c *gin.Context) {
@@ -44,7 +45,7 @@ func GetRedis(c *gin.Context) {
 
 func SetRedis(c *gin.Context) {
 	redis := cache.GetCache()
-	res, err := redis.SetOne(c, "a", 123, 10)
+	res, err := redis.SetOne(c, "a", true, 10)
 	if err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_GET_CACHE_RES, err))
 		return
@@ -55,7 +56,8 @@ func SetRedis(c *gin.Context) {
 
 func HSetRedis(c *gin.Context) {
 	redis := cache.GetCache()
-	res, err := redis.HashSet(c, "a")
+	res, err := redis.HashSet(c, "a", true)
+	redis.Expire(c, "a", 5*time.Second)
 	if err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_GET_CACHE_RES, err.Error()))
 		return
@@ -66,7 +68,7 @@ func HSetRedis(c *gin.Context) {
 
 func HGetRedis(c *gin.Context) {
 	redis := cache.GetCache()
-	res, err := redis.HashGet(c, "a", "d")
+	res, err := redis.HashGet(c, "a", "b")
 	if err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.SUCCESS, err.Error()))
 		return

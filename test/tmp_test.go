@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/go-redis/redis/v8"
+	"github.com/gofrs/uuid"
 	"restful-api-kit/config"
 	"restful-api-kit/helpers"
 	"testing"
@@ -45,16 +46,36 @@ func TestEmail(t *testing.T) {
 	to := "mihanglaoban@outlook.com"
 	config.Setup("../config/dbStaging.json")
 	helpers.InitMail()
-	//定义收件人
-	mailTo := []string{
-		to,
-	}
+
 	//邮件主题为"Hello"
 	subject := "Hello"
 	// 邮件正文
 	body := "Good"
-	err := helpers.SendMail(mailTo, subject, body)
+	err := helpers.SendEMail(subject, body, to)
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+func TestUuid(t *testing.T) {
+	// Creating UUID Version 4
+	// panic on error
+	u1 := uuid.Must(uuid.NewV4())
+	fmt.Printf("UUIDv4: %s\n", u1)
+
+	// or error handling
+	u2, err := uuid.NewV4()
+	if err != nil {
+		fmt.Printf("Something went wrong: %s", err)
+		return
+	}
+	fmt.Printf("UUIDv4: %s\n", u2)
+
+	// Parsing UUID from string input
+	u2, err = uuid.FromString("6ba7b810-9dad-11d1-80b4-00c04fd430c8")
+	if err != nil {
+		fmt.Printf("Something went wrong: %s", err)
+		return
+	}
+	fmt.Printf("Successfully parsed: %s", u2)
 }

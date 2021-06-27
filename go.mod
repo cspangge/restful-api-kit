@@ -7,6 +7,7 @@ require (
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-redis/redis/v8 v8.10.0
+	github.com/gofrs/uuid v3.2.0+incompatible
 	github.com/joho/godotenv v1.3.0
 	github.com/swaggo/swag v1.7.0
 	github.com/unrolled/secure v1.0.9
