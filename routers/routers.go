@@ -20,6 +20,7 @@ func SetupRouter() *gin.Engine {
 
 	v1.POST("/login", apiControllerV1.Login)
 	v1.POST("/signUp", apiControllerV1.SignUp)
+	v1.GET("/activate", apiControllerV1.Activate)
 
 	{
 		v1.POST("/getRedis", apiControllerV1.GetRedis)

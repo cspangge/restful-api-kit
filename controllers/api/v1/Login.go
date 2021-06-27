@@ -23,7 +23,7 @@ func Login(c *gin.Context) {
 	}
 
 	db := database.GetDB()
-	if !models.Exist(db, "tbl_user", "email = ? and pwd = ?", req.Email, req.Password) {
+	if !models.Exist(db, "tbl_user", "email = ? and pwd = ? and active = ?", req.Email, req.Password, models.ACTIVE) {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_LOGIN))
 		return
 	}

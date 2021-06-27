@@ -7,6 +7,11 @@ import (
 	"time"
 )
 
+const (
+	ACTIVE   = 1
+	INACTIVE = 2
+)
+
 type _TblUserMgr struct {
 	*_BaseMgr
 }

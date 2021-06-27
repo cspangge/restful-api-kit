@@ -14,6 +14,7 @@ const (
 	FAIl_TO_GET_CACHE_RES    = 1005
 	ACCOUNT_ALREADY_EXISTS   = 1006
 	FAIl_TO_CREATE_USER      = 1007
+	FAIL_TO_ACTIVATE         = 1008
 )
 
 var (
@@ -26,5 +27,6 @@ var (
 		FAIl_TO_GET_CACHE_RES:    "Fail to get cache result",
 		ACCOUNT_ALREADY_EXISTS:   "Account already exists",
 		FAIl_TO_CREATE_USER:      "Fail to create user",
+		FAIL_TO_ACTIVATE:         "Fail to activate. The activation code has expired. Try again, please.",
 	}
 )

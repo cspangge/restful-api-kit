@@ -50,7 +50,7 @@ func TestEmail(t *testing.T) {
 	//邮件主题为"Hello"
 	subject := "Hello"
 	// 邮件正文
-	body := "Good"
+	body := "bad"
 	err := helpers.SendEMail(subject, body, to)
 	if err != nil {
 		fmt.Println(err)
