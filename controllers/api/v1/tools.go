@@ -31,11 +31,44 @@ func DbPing(c *gin.Context) {
 	u.RespondString(c.Writer, res)
 }
 
-func TestRedis(c *gin.Context) {
+func GetRedis(c *gin.Context) {
 	redis := cache.GetCache()
 	res, err := redis.GetOne(c, "a")
 	if err != nil {
-		c.JSON(http.StatusOK, u.Resp(u.SUCCESS, nil))
+		c.JSON(http.StatusOK, u.Resp(u.SUCCESS, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, u.Resp(u.SUCCESS, res))
+	return
+}
+
+func SetRedis(c *gin.Context) {
+	redis := cache.GetCache()
+	res, err := redis.SetOne(c, "a", 123, 10)
+	if err != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_GET_CACHE_RES, err))
+		return
+	}
+	c.JSON(http.StatusOK, u.Resp(u.SUCCESS, res))
+	return
+}
+
+func HSetRedis(c *gin.Context) {
+	redis := cache.GetCache()
+	res, err := redis.HashSet(c, "a")
+	if err != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_GET_CACHE_RES, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, u.Resp(u.SUCCESS, res))
+	return
+}
+
+func HGetRedis(c *gin.Context) {
+	redis := cache.GetCache()
+	res, err := redis.HashGet(c, "a", "d")
+	if err != nil {
+		c.JSON(http.StatusOK, u.Resp(u.SUCCESS, err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, u.Resp(u.SUCCESS, res))

@@ -18,6 +18,11 @@ func ExampleClient() {
 		DB:       0,     // use default DB
 	})
 
+	//err := rdb.Set(ctx, "key", "value", 0).Err()
+	//if err != nil {
+	//	panic(err)
+	//}
+
 	val, err := rdb.Get(ctx, "a").Result()
 	if err != nil {
 		panic(err)
@@ -32,6 +37,8 @@ func ExampleClient() {
 	} else {
 		fmt.Println("key2", val2)
 	}
+	// Output: key value
+	// key2 does not exist
 }
 
 func TestEmail(t *testing.T) {

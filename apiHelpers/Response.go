@@ -25,6 +25,9 @@ func Resp(code int, data ...interface{}) *Response {
 		Message: CODE2MSG[code],
 		Data:    data,
 	}
+	if len(data) != 0 {
+		res.Data = data[0]
+	}
 	return res
 }
 

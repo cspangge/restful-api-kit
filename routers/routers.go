@@ -19,7 +19,10 @@ func SetupRouter() *gin.Engine {
 	)
 
 	v1.POST("/login", apiControllerV1.Login)
-	v1.POST("/redis", apiControllerV1.TestRedis)
+	v1.POST("/getRedis", apiControllerV1.GetRedis)
+	v1.POST("/setRedis", apiControllerV1.SetRedis)
+	v1.POST("/setHRedis", apiControllerV1.HSetRedis)
+	v1.POST("/getHRedis", apiControllerV1.HGetRedis)
 
 	v1.Use(middlewares.JWTAuth())
 	// V1
