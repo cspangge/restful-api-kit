@@ -1,35 +1,53 @@
 package test
 
 import (
+	"context"
 	"fmt"
+	"github.com/go-redis/redis/v8"
+	"restful-api-kit/config"
 	"restful-api-kit/helpers"
 	"testing"
 )
 
-func TestEmail(t *testing.T) {
+var ctx = context.Background()
 
-	user := "yang**@yun*.com"
-	password := "***"
-	host := "smtp.exmail.qq.com:25"
-	to := "397685131@qq.com"
+func ExampleClient() {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		Password: "123", // no password set
+		DB:       0,     // use default DB
+	})
 
-	subject := "使用Golang发送邮件"
-
-	body := `
-		<html>
-		<body>
-		<h3>
-		"Test send to email"
-		</h3>
-		</body>
-		</html>
-		`
-	fmt.Println("send email")
-	err := helpers.SendToMail(user, password, host, to, subject, body, "html")
+	val, err := rdb.Get(ctx, "a").Result()
 	if err != nil {
-		fmt.Println("Send mail error!")
-		fmt.Println(err)
+		panic(err)
+	}
+	fmt.Println("key", val)
+
+	val2, err := rdb.Get(ctx, "key2").Result()
+	if err == redis.Nil {
+		fmt.Println("key2 does not exist")
+	} else if err != nil {
+		panic(err)
 	} else {
-		fmt.Println("Send mail success!")
+		fmt.Println("key2", val2)
+	}
+}
+
+func TestEmail(t *testing.T) {
+	to := "mihanglaoban@outlook.com"
+	config.Setup("../config/dbStaging.json")
+	helpers.InitMail()
+	//定义收件人
+	mailTo := []string{
+		to,
+	}
+	//邮件主题为"Hello"
+	subject := "Hello"
+	// 邮件正文
+	body := "Good"
+	err := helpers.SendMail(mailTo, subject, body)
+	if err != nil {
+		fmt.Println(err)
 	}
 }

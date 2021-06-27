@@ -7,5 +7,17 @@
     "host": "117.120.8.54",
     "port": "3306",
     "table_prefix": "tbl_"
+  },
+  "email" : {
+    "user" : "tar@seacowtech.cn",
+    "password" : "ChengYe2020..",
+    "host" : "mail.seacowtech.cn",
+    "port": "25"
+  },
+  "redis": {
+    "host": "localhost",
+    "port": "6379",
+    "db" : "",
+    "password": "123"
   }
 }

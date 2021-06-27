@@ -1,22 +1,31 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	_ "github.com/gin-gonic/gin"
+	"restful-api-kit/cache"
 	"restful-api-kit/config"
+	"restful-api-kit/helpers"
 	Routers "restful-api-kit/routers"
 	tools "restful-api-kit/utilities"
 )
 
 func main() {
-	InitServer()
-	server := Routers.SetupRouter()
-	port := tools.GetEnv("port")
-	if port == "" {
-		port = "8000" //localhost
+	Initialize()
+	if err := Routers.SetupRouter().RunTLS(
+		fmt.Sprintf(":%d", GetPort()),
+		"./key/localhost.crt",
+		"./key/localhost.key"); err != nil {
+		panic(err)
 	}
-	err := server.RunTLS(":"+port, "./key/localhost.crt", "./key/localhost.key")
-	tools.CheckErr(err)
+}
+
+func Initialize() {
+	InitServer()
+	config.Setup()
+	helpers.InitMail()
+	cache.InitRedis()
 }
 
 func InitServer() {
@@ -29,5 +38,12 @@ func InitServer() {
 	default:
 		gin.SetMode(gin.DebugMode)
 	}
-	config.Setup()
+}
+
+func GetPort() string {
+	port := tools.GetEnv("port")
+	if port == "" {
+		port = "8000" //localhost
+	}
+	return port
 }
