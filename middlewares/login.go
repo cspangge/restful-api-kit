@@ -4,6 +4,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 type Claims struct {
@@ -12,7 +13,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-var JwtSecret=[]byte(
+var JwtSecret = []byte(
 	`-----BEGIN RSA PRIVATE KEY-----
 MIIEowIBAAKCAQEA0NVnB1TZ15xma7+wRYcRLTQ1Zcjw07xIRGHYS5BpgxofsKg0
 vYQ9PCs4oXDiR5YPiK0VMlIDx11YmjuLNfJH2g+NIU+XS3wGywQUfLZ+cPLv5HAZ
@@ -43,7 +44,7 @@ func JWTAuth() gin.HandlerFunc {
 		token := c.Request.Header.Get("Authorization")
 		if token == "" {
 			c.JSON(http.StatusOK, gin.H{
-				"msg":    "请求未携带token，无权限访问",
+				"msg": "请求未携带token，无权限访问",
 			})
 			c.Abort()
 			return
@@ -52,7 +53,7 @@ func JWTAuth() gin.HandlerFunc {
 		claims, err := ParseToken(token)
 		if err != nil {
 			c.JSON(http.StatusOK, gin.H{
-				"msg":    err.Error(),
+				"msg": err.Error(),
 			})
 			c.Abort()
 			return
@@ -73,4 +74,22 @@ func ParseToken(token string) (*Claims, error) {
 		}
 	}
 	return nil, err
+}
+
+func GenerateToken(username, password string) (string, error) {
+	nowTime := time.Now()                       //当前时间
+	expireTime := nowTime.Add(30 * time.Second) //有效时间
+
+	claims := Claims{
+		username,
+		password,
+		jwt.StandardClaims{
+			ExpiresAt: expireTime.Unix(),
+			Issuer:    "tar",
+		},
+	}
+
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := tokenClaims.SignedString(JwtSecret)
+	return token, err
 }

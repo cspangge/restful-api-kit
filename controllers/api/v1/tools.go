@@ -1,8 +1,6 @@
 package v1
 
 import (
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	_ "log"
 	"net/http"
@@ -12,7 +10,6 @@ import (
 	"restful-api-kit/models"
 	_ "restful-api-kit/utilities"
 	tools "restful-api-kit/utilities"
-	"time"
 )
 
 func Ping(c *gin.Context) {
@@ -42,11 +39,7 @@ func Login(c *gin.Context) {
 	}
 	var req LoginReq
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    1000,
-			"message": "fail",
-			"data":    fmt.Sprintf("ERORR: %v", err),
-		})
+		c.JSON(http.StatusOK, u.MakeRes(u.FAIL_TO_PARSE_PARAMETERS))
 		return
 	}
 
@@ -55,37 +48,16 @@ func Login(c *gin.Context) {
 	models.TblUserMgr(db.Where("email = ? and pwd = ?", req.Email, req.Password)).Count(&count)
 
 	if count == 0 {
-		c.JSON(http.StatusOK, gin.H{
-			"code":    http.StatusOK,
-			"message": "Failure",
-			"data":    "Check your email and password, please",
-		})
+		c.JSON(http.StatusOK, u.MakeRes(u.FAIL_TO_LOGIN))
 		return
 	}
 
-	res, _ := GenerateToken(req.Email, req.Password)
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-		"data":    res,
-	})
-	return
-}
-
-func GenerateToken(username, password string) (string, error) {
-	nowTime := time.Now()                       //当前时间
-	expireTime := nowTime.Add(30 * time.Second) //有效时间
-
-	claims := middlewares.Claims{
-		username,
-		password,
-		jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
-			Issuer:    "tar",
-		},
+	res, err := middlewares.GenerateToken(req.Email, req.Password)
+	if err != nil {
+		c.JSON(http.StatusOK, u.MakeRes(u.FAIL_TO_GET_TOKEN))
+		return
 	}
 
-	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := tokenClaims.SignedString(middlewares.JwtSecret)
-	return token, err
+	c.JSON(http.StatusOK, u.MakeRes(u.SUCCESS, res))
+	return
 }
