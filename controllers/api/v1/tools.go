@@ -9,7 +9,7 @@ import (
 	u "restful-api-kit/apiHelpers"
 	"restful-api-kit/database"
 	"restful-api-kit/middlewares"
-	"restful-api-kit/model"
+	"restful-api-kit/models"
 	_ "restful-api-kit/utilities"
 	tools "restful-api-kit/utilities"
 	"time"
@@ -52,7 +52,7 @@ func Login(c *gin.Context) {
 
 	var count int64
 	db := database.GetDB()
-	model.TblUserMgr(db.Where("email = ? and pwd = ?", req.Email, req.Password)).Count(&count)
+	models.TblUserMgr(db.Where("email = ? and pwd = ?", req.Email, req.Password)).Count(&count)
 
 	if count == 0 {
 		c.JSON(http.StatusOK, gin.H{

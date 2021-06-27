@@ -1,9 +1,10 @@
-package model
+package models
 
 import (
 	"context"
 	"fmt"
 	"gorm.io/gorm"
+	"time"
 )
 
 type _TblUserMgr struct {
@@ -58,6 +59,41 @@ func (obj *_TblUserMgr) WithEmail(email string) Option {
 // WithPwd pwd获取
 func (obj *_TblUserMgr) WithPwd(pwd string) Option {
 	return optionFunc(func(o *options) { o.query["pwd"] = pwd })
+}
+
+// WithRole role获取
+func (obj *_TblUserMgr) WithRole(role int) Option {
+	return optionFunc(func(o *options) { o.query["role"] = role })
+}
+
+// WithActive active获取
+func (obj *_TblUserMgr) WithActive(active int) Option {
+	return optionFunc(func(o *options) { o.query["active"] = active })
+}
+
+// WithDisableURL disable_url获取
+func (obj *_TblUserMgr) WithDisableURL(disableURL string) Option {
+	return optionFunc(func(o *options) { o.query["disable_url"] = disableURL })
+}
+
+// WithCreatedAt created_at获取
+func (obj *_TblUserMgr) WithCreatedAt(createdAt time.Time) Option {
+	return optionFunc(func(o *options) { o.query["created_at"] = createdAt })
+}
+
+// WithCreatedBy created_by获取
+func (obj *_TblUserMgr) WithCreatedBy(createdBy int) Option {
+	return optionFunc(func(o *options) { o.query["created_by"] = createdBy })
+}
+
+// WithUpdatedAt updated_at获取
+func (obj *_TblUserMgr) WithUpdatedAt(updatedAt time.Time) Option {
+	return optionFunc(func(o *options) { o.query["updated_at"] = updatedAt })
+}
+
+// WithUpdatedBy updated_by获取
+func (obj *_TblUserMgr) WithUpdatedBy(updatedBy int) Option {
+	return optionFunc(func(o *options) { o.query["updated_by"] = updatedBy })
 }
 
 // GetByOption 功能选项模式获取
@@ -142,6 +178,104 @@ func (obj *_TblUserMgr) GetFromPwd(pwd string) (results []*TblUser, err error) {
 // GetBatchFromPwd 批量查找
 func (obj *_TblUserMgr) GetBatchFromPwd(pwds []string) (results []*TblUser, err error) {
 	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`pwd` IN (?)", pwds).Find(&results).Error
+
+	return
+}
+
+// GetFromRole 通过role获取内容
+func (obj *_TblUserMgr) GetFromRole(role int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`role` = ?", role).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromRole 批量查找
+func (obj *_TblUserMgr) GetBatchFromRole(roles []int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`role` IN (?)", roles).Find(&results).Error
+
+	return
+}
+
+// GetFromActive 通过active获取内容
+func (obj *_TblUserMgr) GetFromActive(active int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`active` = ?", active).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromActive 批量查找
+func (obj *_TblUserMgr) GetBatchFromActive(actives []int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`active` IN (?)", actives).Find(&results).Error
+
+	return
+}
+
+// GetFromDisableURL 通过disable_url获取内容
+func (obj *_TblUserMgr) GetFromDisableURL(disableURL string) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`disable_url` = ?", disableURL).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromDisableURL 批量查找
+func (obj *_TblUserMgr) GetBatchFromDisableURL(disableURLs []string) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`disable_url` IN (?)", disableURLs).Find(&results).Error
+
+	return
+}
+
+// GetFromCreatedAt 通过created_at获取内容
+func (obj *_TblUserMgr) GetFromCreatedAt(createdAt time.Time) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`created_at` = ?", createdAt).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromCreatedAt 批量查找
+func (obj *_TblUserMgr) GetBatchFromCreatedAt(createdAts []time.Time) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`created_at` IN (?)", createdAts).Find(&results).Error
+
+	return
+}
+
+// GetFromCreatedBy 通过created_by获取内容
+func (obj *_TblUserMgr) GetFromCreatedBy(createdBy int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`created_by` = ?", createdBy).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromCreatedBy 批量查找
+func (obj *_TblUserMgr) GetBatchFromCreatedBy(createdBys []int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`created_by` IN (?)", createdBys).Find(&results).Error
+
+	return
+}
+
+// GetFromUpdatedAt 通过updated_at获取内容
+func (obj *_TblUserMgr) GetFromUpdatedAt(updatedAt time.Time) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`updated_at` = ?", updatedAt).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromUpdatedAt 批量查找
+func (obj *_TblUserMgr) GetBatchFromUpdatedAt(updatedAts []time.Time) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`updated_at` IN (?)", updatedAts).Find(&results).Error
+
+	return
+}
+
+// GetFromUpdatedBy 通过updated_by获取内容
+func (obj *_TblUserMgr) GetFromUpdatedBy(updatedBy int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`updated_by` = ?", updatedBy).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromUpdatedBy 批量查找
+func (obj *_TblUserMgr) GetBatchFromUpdatedBy(updatedBys []int) (results []*TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`updated_by` IN (?)", updatedBys).Find(&results).Error
 
 	return
 }
