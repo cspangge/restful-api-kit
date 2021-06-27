@@ -10,12 +10,12 @@ import (
 
 func main() {
 	InitServer()
-	r := Routers.SetupRouter()
+	server := Routers.SetupRouter()
 	port := tools.GetEnv("port")
 	if port == "" {
 		port = "8000" //localhost
 	}
-	err := r.RunTLS(":"+port, "./key/localhost.crt", "./key/localhost.key")
+	err := server.RunTLS(":"+port, "./key/localhost.crt", "./key/localhost.key")
 	tools.CheckErr(err)
 }
 
