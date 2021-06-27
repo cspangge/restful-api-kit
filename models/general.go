@@ -20,8 +20,8 @@ func Count(tx *gorm.DB, tbl string, query interface{}, args ...interface{}) int6
 	return count
 }
 
-func GetMaxId(tx *gorm.DB, tbl, field string) int {
-	var id int
+func GetMaxId(tx *gorm.DB, tbl, field string) uint {
+	var id uint
 	tx.Raw(fmt.Sprintf("SELECT MAX(%s) FROM %s", field, tbl)).Scan(&id)
 	return id
 }

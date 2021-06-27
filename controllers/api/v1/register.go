@@ -9,7 +9,6 @@ import (
 )
 
 type SignUpReq struct {
-	UserId   int    `json:"userId;"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -26,20 +25,24 @@ func SignUp(c *gin.Context) {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_PARSE_PARAMETERS))
 		return
 	}
-
-	if models.Exist(db, tbl, "mail = ?", req.Email) {
+	if models.Exist(db, tbl, "email = ?", req.Email) {
 		c.JSON(http.StatusOK, u.Resp(u.ACCOUNT_ALREADY_EXISTS))
 		return
 	}
 
-	var id = models.GetMaxId(db, tbl, "user_id")
-	req.UserId = id + 1
+	var (
+		id   = models.GetMaxId(db, tbl, "user_id")
+		user = models.TblUser{
+			UserID: id + 1,
+			Name:   req.Name,
+			Email:  req.Email,
+			Pwd:    req.Password,
+		}
+	)
 
-	var err = db.Table(tbl).Create(&req).Error
-	if err != nil {
+	if err := db.Table(tbl).Create(&user).Error; err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, err.Error()))
 		return
 	}
-
 	c.JSON(http.StatusOK, u.Resp(u.SUCCESS))
 }
