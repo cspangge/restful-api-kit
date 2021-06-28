@@ -35,7 +35,7 @@ func SignUp(c *gin.Context) {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, findErr.Error()))
 		return
 	}
-	if &userRecord != nil && userRecord.Active == models.ACTIVE {
+	if userRecord.ID == 0 && userRecord.Active == models.ACTIVE {
 		c.JSON(http.StatusOK, u.Resp(u.ACCOUNT_ALREADY_EXISTS))
 		return
 	}
@@ -56,7 +56,7 @@ func SignUp(c *gin.Context) {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, uuidErr.Error()))
 	}
 
-	if &userRecord == nil {
+	if userRecord.ID == 0 {
 		if _, setErr := redis.SetOne(c, uuid, newUserModel.UserID, 1*60); setErr != nil {
 			c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, setErr.Error()))
 		}

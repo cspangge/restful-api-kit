@@ -10,7 +10,7 @@ func GetUserByEmail(db *gorm.DB, email string) (models.TblUser, error) {
 	return userModel.GetByOption(userModel.WithEmail(email))
 }
 
-func GetUserByEmailPwd(db *gorm.DB, email, pwd string) (*models.TblUser, error) {
+func GetUserByEmailPwd(db *gorm.DB, email, pwd string) (models.TblUser, error) {
 	userModel := models.TblUserMgr(db)
 	return userModel.FetchByTblUserEmail(email, pwd)
 }

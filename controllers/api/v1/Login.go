@@ -26,8 +26,8 @@ func Login(c *gin.Context) {
 	db := database.GetDB()
 
 	userRecord, findErr := UserModel.GetUserByEmailPwd(db, req.Email, req.Password)
-	if userRecord == nil || findErr != nil || userRecord.ID == 0 {
-		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_LOGIN))
+	if findErr != nil || userRecord.ID == 0 {
+		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_LOGIN, findErr))
 		return
 	}
 
