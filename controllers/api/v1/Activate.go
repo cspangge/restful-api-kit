@@ -24,9 +24,16 @@ func Activate(c *gin.Context) {
 
 	var user models.TblUser
 	db := database.GetDB()
-	err = models.TblUserMgr(db.Model(&user).Where("user_id = ?", userId)).Update("active", 1).Error
+	err = models.TblUserMgr(db.Model(&user).Where("user_id = ?", userId)).Update("active", models.ACTIVE).Error
 	if err != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_ACTIVATE, err.Error()))
+		return
+	}
+
+	if err := redis.Del(c, activeToken).Err(); err != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_ACTIVATE, err.Error()))
+		return
 	}
 	c.JSON(http.StatusOK, u.Resp(u.SUCCESS))
+	return
 }

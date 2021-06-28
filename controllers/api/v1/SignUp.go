@@ -9,6 +9,7 @@ import (
 	d "restful-api-kit/database"
 	"restful-api-kit/helpers"
 	"restful-api-kit/models"
+	"restful-api-kit/models/UserModel"
 )
 
 type SignUpReq struct {
@@ -28,7 +29,13 @@ func SignUp(c *gin.Context) {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_PARSE_PARAMETERS))
 		return
 	}
-	if models.Exist(db, tbl, "email = ?", req.Email) {
+
+	userRecord, findErr := UserModel.GetUserByEmail(db, req.Email)
+	if findErr != nil {
+		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, findErr.Error()))
+		return
+	}
+	if &userRecord != nil && userRecord.Active == models.ACTIVE {
 		c.JSON(http.StatusOK, u.Resp(u.ACCOUNT_ALREADY_EXISTS))
 		return
 	}
@@ -37,7 +44,7 @@ func SignUp(c *gin.Context) {
 		id            = models.GetMaxId(db, tbl, "user_id")
 		redis         = cache.GetCache()
 		uuid, uuidErr = helpers.GetUuid()
-		user          = models.TblUser{
+		newUserModel  = models.TblUser{
 			UserID: id + 1,
 			Name:   req.Name,
 			Email:  req.Email,
@@ -48,12 +55,19 @@ func SignUp(c *gin.Context) {
 	if uuidErr != nil {
 		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, uuidErr.Error()))
 	}
-	if _, setErr := redis.SetOne(c, uuid, user.UserID, 1*60); setErr != nil {
-		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, setErr.Error()))
-	}
-	if err := db.Table(tbl).Create(&user).Error; err != nil {
-		c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, err.Error()))
-		return
+
+	if &userRecord == nil {
+		if _, setErr := redis.SetOne(c, uuid, newUserModel.UserID, 1*60); setErr != nil {
+			c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, setErr.Error()))
+		}
+		if err := db.Table(tbl).Create(&newUserModel).Error; err != nil {
+			c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, err.Error()))
+			return
+		}
+	} else {
+		if _, setErr := redis.SetOne(c, uuid, userRecord.UserID, 1*60); setErr != nil {
+			c.JSON(http.StatusOK, u.Resp(u.FAIl_TO_CREATE_USER, setErr.Error()))
+		}
 	}
 
 	var (

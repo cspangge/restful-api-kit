@@ -7,6 +7,7 @@ import (
 	"restful-api-kit/database"
 	"restful-api-kit/middlewares"
 	"restful-api-kit/models"
+	"restful-api-kit/models/UserModel"
 )
 
 type LoginReq struct {
@@ -23,10 +24,22 @@ func Login(c *gin.Context) {
 	}
 
 	db := database.GetDB()
-	if !models.Exist(db, "tbl_user", "email = ? and pwd = ? and active = ?", req.Email, req.Password, models.ACTIVE) {
+
+	userRecord, findErr := UserModel.GetUserByEmailPwd(db, req.Email, req.Password)
+	if userRecord == nil || findErr != nil || userRecord.ID == 0 {
 		c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_LOGIN))
 		return
 	}
+
+	if userRecord.Active == models.INACTIVE {
+		c.JSON(http.StatusOK, u.Resp(u.ACTIVATE_FIRST))
+		return
+	}
+
+	//if !models.Exist(db, "tbl_user", "email = ? and pwd = ? and active = ?", req.Email, req.Password, models.ACTIVE) {
+	//	c.JSON(http.StatusOK, u.Resp(u.FAIL_TO_LOGIN))
+	//	return
+	//}
 
 	res, err := middlewares.GenerateToken(req.Email, req.Password)
 	if err != nil {

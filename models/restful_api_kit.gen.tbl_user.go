@@ -326,3 +326,9 @@ func (obj *_TblUserMgr) FetchIndexByTblUserEmailIDX(email string, pwd string) (r
 
 	return
 }
+
+func (obj *_TblUserMgr) FetchByTblUserEmail(email string, pwd string) (results *TblUser, err error) {
+	err = obj.DB.WithContext(obj.ctx).Table(obj.GetTableName()).Where("`email` = ? AND `pwd` = ?", email, pwd).Find(&results).Error
+
+	return
+}
